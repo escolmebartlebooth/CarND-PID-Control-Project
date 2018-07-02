@@ -1,4 +1,5 @@
 #include "PID.h"
+#include <iostream>
 
 using namespace std;
 
@@ -20,9 +21,9 @@ void PID::Init(double Kp, double Ki, double Kd) {
   this->i_error = 0;
   this->d_error = 0;
 
-  std::cout << "PID Controller Initialised" << std::endl;
-  std::cout << this->Kp << " " << this->Ki << " " << this->Kd << std::endl;
-  std::cout << this->p_error << " " << this->i_error << " " << this->d_error << std::endl;
+  cout << "PID Controller Initialised" << endl;
+  cout << this->Kp << " " << this->Ki << " " << this->Kd << endl;
+  cout << this->p_error << " " << this->i_error << " " << this->d_error << endl;
 
 }
 
