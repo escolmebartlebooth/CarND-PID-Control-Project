@@ -62,8 +62,9 @@ int main()
           * another PID controller to control the speed!
           */
 
+
           // DEBUG
-          std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+          std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " angle: " << angle << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
