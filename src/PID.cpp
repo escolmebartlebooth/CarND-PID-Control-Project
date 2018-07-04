@@ -29,7 +29,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
 void PID::UpdateError(double cte) {
   // proportional bit
-  p_error = Kp*cte;
+  p_error = -Kp*cte;
 }
 
 double PID::TotalError() {
