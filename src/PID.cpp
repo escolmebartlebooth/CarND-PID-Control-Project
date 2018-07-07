@@ -20,16 +20,19 @@ void PID::Init(double Kp, double Ki, double Kd) {
   this->p_error = 0;
   this->i_error = 0;
   this->d_error = 0;
+  this->d_cte = 0;
 
   cout << "PID Controller Initialised" << endl;
   cout << this->Kp << " " << this->Ki << " " << this->Kd << endl;
   cout << this->p_error << " " << this->i_error << " " << this->d_error << endl;
-
+  cout << this->d_cte << endl;
 }
 
 void PID::UpdateError(double cte) {
   // proportional bit
   p_error = -Kp*cte;
+  d_error = -Kd*(cte - d_cte);
+  d_cte = cte;
 }
 
 double PID::TotalError() {

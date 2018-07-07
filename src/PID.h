@@ -2,6 +2,11 @@
 #define PID_H
 
 class PID {
+private:
+  /*
+  * track cte change
+  */
+  double d_cte;
 public:
   /*
   * Errors
@@ -12,7 +17,7 @@ public:
 
   /*
   * Coefficients
-  */ 
+  */
   double Kp;
   double Ki;
   double Kd;
