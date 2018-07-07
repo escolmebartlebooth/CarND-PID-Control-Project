@@ -7,6 +7,7 @@ private:
   * track cte change
   */
   double d_cte;
+  double i_cte;
 public:
   /*
   * Errors
