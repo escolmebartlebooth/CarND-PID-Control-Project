@@ -41,12 +41,12 @@ int main()
 
   PID t_pid;
   // TODO: Initialize the pid variable.
-  double iKp = 0.32;
-  double iKi = 0.0;
-  double iKd = 0.023;
-  t_pid.Init(iKp, iKi, iKd);
+  double tKp = 0.32;
+  double tKi = 0.0;
+  double tKd = 0.023;
+  t_pid.Init(tKp, tKi, tKd);
 
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid, &t_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
