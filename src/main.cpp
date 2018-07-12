@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
   // looking for -t(une) -s(peed)
   int c = 1;
   while (c < argc) {
-    std::cout << argv[c] << endl;
+    std::cout << argv[c] << std::endl;
     c += 1;
   }
 
