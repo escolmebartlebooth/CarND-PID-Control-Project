@@ -43,13 +43,6 @@ void PID::UpdateError(double cte) {
 }
 
 double PID::TotalError() {
-  double total_error = p_error + i_error + d_error;
-  if (total_error > 1) {
-    return 1;
-  } else if (total_error < -1) {
-    return -1;
-  } else {
-    return total_error;
-  }
+  return p_error + i_error + d_error;
 }
 
