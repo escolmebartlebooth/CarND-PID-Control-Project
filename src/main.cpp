@@ -28,9 +28,17 @@ std::string hasData(std::string s) {
   return "";
 }
 
-int main()
+int main(int argc, char* argv[])
 {
   uWS::Hub h;
+
+  // get control parameters - consider getopt next time...
+  // looking for -t(une) -s(peed)
+  int c = 1;
+  while (c < argc) {
+    std::cout << argv[c] << endl;
+    c += 1;
+  }
 
   PID pid;
   // TODO: Initialize the pid variable.
