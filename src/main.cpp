@@ -46,7 +46,7 @@ int main()
   double tKd = 0.023;
   t_pid.Init(tKp, tKi, tKd);
 
-  h.onMessage([&pid, &t_pid, &step](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid, &t_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -70,10 +70,12 @@ int main()
           */
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
-          if (steer_value > 1.0)
+          if (steer_value > 1.0) {
             steer_value = 1.0;
-          if (steer_value < -1.0)
-            steer_value = -1.0
+          }
+          if (steer_value < -1.0) {
+            steer_value = -1.0;
+          }
 
           t_pid.UpdateError(fabs(cte));
           speed = 1.0 - fabs(t_pid.TotalError());
