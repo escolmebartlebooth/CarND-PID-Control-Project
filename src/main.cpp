@@ -33,10 +33,17 @@ int main(int argc, char* argv[])
   uWS::Hub h;
 
   // get control parameters - consider getopt next time...
-  // looking for -t(une) -s(peed)
+  // looking for -t(une) -s(peed) -k 0 1 2(steer values) -v 0 1 2 (throttle values)
   int c = 1;
+  bool tune_controller = false;
+  bool use_throttle_controller = false;
   while (c < argc) {
-    std::cout << argv[c] << std::endl;
+    if (argv[c] == "-t") {
+      tune_controller = true;
+    }
+    if (argv[c] == "-s") {
+      use_throttle_controller = true;
+    }
     c += 1;
   }
 
