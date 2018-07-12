@@ -1,7 +1,11 @@
-# CarND-Controls-PID
-Self-Driving Car Engineer Nanodegree Program
+# CarND-Controls-PID: Self-Driving Car Engineer Nanodegree Program
+
+Author: David Escolme
+Date: 15 July 2018
 
 ---
+
+## Objectives
 
 ## Dependencies
 
@@ -19,80 +23,50 @@ Self-Driving Car Engineer Nanodegree Program
   * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
   * If you install from source, checkout to commit `e94b6e1`, i.e.
     ```
-    git clone https://github.com/uWebSockets/uWebSockets 
+    git clone https://github.com/uWebSockets/uWebSockets
     cd uWebSockets
     git checkout e94b6e1
     ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
 * Simulator. You can download these from the [project intro page](https://github.com/udacity/self-driving-car-sim/releases) in the classroom.
-
-There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
 
 ## Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
-## Editor Settings
+## Software Structure
 
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
+The software is located in /src:
 
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
+* main.cpp: In this we initialise the PID Controller(s) and pass them into the message handler. In the handler, 3 main flows exist:
+  * if requested to tune, a twiddle algorithm runs (see later) - this only tunes the steering controller
+  * the steer value is updated according to PID control settings after the PID controller is passed the current cross-track error
+  * if throttle control is switched on, the throttle value is updated according to its own control value
+* PID.cpp / h: In this we have the PID controller:
+  * Init: Takes initial values and sets PID control values and initial errors
+  * UpdateError: Takes the current cross-track error and updates the control terms for Proportional, Integral and Derivative control
+  * TotalError: Outputs the accumulated control error across the 3 control errors and in effect returns the adjustment for steering (or throttle) - the value is limited at + or - 1.
 
-## Code Style
+## Discussion
 
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
+### How PID works
 
-## Project Instructions and Rubric
+If a control value (for example steering) can be measured in terms of how far away from the control value is from the optimium value, then a controller can be created which returns the object being controlled to that optimium value.
 
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
+In PID control, 3 control terms are applicable:
+* P(roportional): the control value is reduced in proportion to itself using a constant proportional value (Kp). For example, if the control error (CTE) is 5 units, the proportional controller would adjust the controller by -Kp*CTE = -5Kp.
+* I(ntegral)
+* D(erivative)
 
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
+Each term contributes to the overall control...
 
-## Hints!
+### Tuning: Manual Approaches
 
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
+### Tuning: Algorithmic Approaches
 
-## Call for IDE Profiles Pull Requests
-
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
-
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+### Burning it up
 
