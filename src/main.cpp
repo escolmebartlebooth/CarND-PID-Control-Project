@@ -36,13 +36,13 @@ int main(int argc, char* argv[])
   // looking for -t(une) -s(peed)
   int c = 1;
   int tune_controller = -1;
-  bool use_throttle_controller = false;
+  int use_throttle_controller = -1;
   while (c < argc) {
-    if (argv[c] == "-t") {
+    if (strcmp(argv[c],"-t") == 0) {
       tune_controller = 0;
     }
-    if (argv[c] == "-s") {
-      use_throttle_controller = true;
+    if (strcmp(argv[c],"-s") == 0) {
+      use_throttle_controller = 0;
     }
     c += 1;
   }
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
   double tKd = 3.0;
   t_pid.Init(tKp, tKi, tKd);
 
-  h.onMessage([&pid, &t_pid, &tune_controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid, &t_pid, &tune_controller, &use_throttle_controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -87,6 +87,7 @@ int main(int argc, char* argv[])
           * another PID controller to control the speed!
           */
           std::cout << tune_controller << std::endl;
+          std::cout << use_throttle_controller << std::endl;
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
           if (steer_value > 1.0) {
