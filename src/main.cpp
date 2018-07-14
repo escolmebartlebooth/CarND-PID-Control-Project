@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
         std::cout << "throttle control on!" << std::endl;
       } else {
         if (atof(argv[c]) !=0) {
-          coeffs[count_params] = atof(argv[c])
+          coeffs[count_params] = atof(argv[c]);
           count_params += 1;
         }
       }
