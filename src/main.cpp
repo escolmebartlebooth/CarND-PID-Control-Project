@@ -84,11 +84,7 @@ int main(int argc, char* argv[])
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          if (tune_controller == true) {
-            std::cout << "tune" << std::endl;
-          } {
-            std::cout << "don't tune" << std::endl;
-          }
+          std::cout << tune_controller << std::endl;
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
           if (steer_value > 1.0) {
