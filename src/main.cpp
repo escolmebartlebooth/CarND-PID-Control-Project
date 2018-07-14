@@ -47,6 +47,8 @@ int main(int argc, char* argv[])
     c += 1;
   }
 
+  std::cout << tune_controller << std::endl;
+
   PID pid;
   // TODO: Initialize the pid variable.
   double iKp = 0.135;
