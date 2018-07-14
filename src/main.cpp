@@ -84,6 +84,7 @@ int main(int argc, char* argv[])
   int use_throttle_controller = -1;
 
   std::vector<double> coeffs = {0.135,0.00027,3.05};
+  std::vector<double> throttle_coeffs = {0.6,0.0,3.0};
   int count_params = 0;
   while (c < argc) {
     if (strcmp(argv[c],"-t") == 0) {
@@ -96,7 +97,10 @@ int main(int argc, char* argv[])
         if (count_params < 3) {
           coeffs[count_params] = atof(argv[c]);
           count_params += 1;
-        }
+        } else if (count_params < 6) {
+          thottle_coeffs[count_params-3] = atof(argv[c]);
+          count_params += 1;
+          }
       }
     c += 1;
   }
@@ -107,10 +111,7 @@ int main(int argc, char* argv[])
 
   PID t_pid;
   // TODO: Initialize the pid variable.
-  double tKp = 0.6;
-  double tKi = 0.0;
-  double tKd = 3.0;
-  t_pid.Init(tKp, tKi, tKd);
+  t_pid.Init(throttle_coeffs[0], throttle_coeffs[1], throttle_coeffs[2]);
 
   h.onMessage([&pid, &t_pid, &tune_controller, &use_throttle_controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
