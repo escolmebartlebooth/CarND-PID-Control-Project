@@ -32,8 +32,8 @@ double best_error = 100000;
 double t_state = 0;
 int t_idx = 0;
 int t_iter = 0;
-std::Vector<double> p = {0,0,0};
-std::Vector<double> dp = {1,1,1};
+std::vector<double> p = {0,0,0};
+std::vector<double> dp = {1,1,1};
 
 void twiddle(PID &pid_steer) {
   if (t_state == 0) {
