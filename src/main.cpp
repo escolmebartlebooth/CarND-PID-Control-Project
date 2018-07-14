@@ -28,6 +28,51 @@ std::string hasData(std::string s) {
   return "";
 }
 
+double best_error = 100000;
+double t_state = 0;
+int t_idx = 0;
+int t_iter = 0;
+std::Vector<double> p = {0,0,0};
+std::Vector<double> dp = {1,1,1};
+
+void twiddle(PID &pid_steer) {
+  if (t_state == 0) {
+    best_error = pid_steer.TotalError();
+    p[t_idx] += dp[t_idx];
+    t_state = 1
+  } else if (t_state == 1) {
+    if (pid_steer.TotalError() < best_error) {
+      best_error = pid_steer.TotalError();
+      dp[t_idx] *= 1.1;
+      t_idx = (t_idx + 1) % 3;
+      p[t_idx] += dp[t_idx];
+      t_state = 1;
+    } else {
+      p[t_idx] -= 2 * dp[t_idx];
+      if (p[t_idx] < 0) {
+        p[t_idx] = 0;
+        t_idx = (t_idx + 1) % 3;
+      }
+      t_state = 2;
+    }
+  } else {
+    if (pid_steer.TotalError() < best_error) {
+      best_error = pid_steer.TotalError();
+      dp[t_idx] *= 1.1;
+      t_idx = (t_idx + 1) % 3;
+      p[t_idx] += dp[t_idx];
+      t_state = 1;
+    } else {
+      p[t_idx] += dp[t_idx];
+      dp[t_idx] *= 0.9;
+      t_idx = (t_idx + 1) % 3;
+      p[t_idx] += dp[t_idx];
+      t_state = 1;
+    }
+  }
+  pid_steer.Init(p[0], p[1], p[2]);
+}
+
 int main(int argc, char* argv[])
 {
   uWS::Hub h;
@@ -101,17 +146,36 @@ int main(int argc, char* argv[])
           } else {
             throttle = 0.3;
           }
-          // DEBUG
-          std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
-          std::cout << " angle: " << angle;
-          std::cout << " speed: " << speed << std::endl;
+          if (tune_controller == 0) {
+            t_iter += 1;
+            if (t_iter > 500) {
+              twiddle(pid);
+              t_iter = 0;
+            }
+            // DEBUG
+            std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
+            std::cout << " angle: " << angle;
+            std::cout << " speed: " << speed << std::endl;
 
-          json msgJson;
-          msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = throttle;
-          auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-          std::cout << msg << std::endl;
-          ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+            json msgJson;
+            msgJson["steering_angle"] = steer_value;
+            msgJson["throttle"] = throttle;
+            auto msg = "42[\"steer\"," + msgJson.dump() + "]";
+            std::cout << msg << std::endl;
+            ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+          } else {
+            // DEBUG
+            std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
+            std::cout << " angle: " << angle;
+            std::cout << " speed: " << speed << std::endl;
+
+            json msgJson;
+            msgJson["steering_angle"] = steer_value;
+            msgJson["throttle"] = throttle;
+            auto msg = "42[\"steer\"," + msgJson.dump() + "]";
+            std::cout << msg << std::endl;
+            ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+          }
         }
       } else {
         // Manual driving
