@@ -35,11 +35,11 @@ int main(int argc, char* argv[])
   // get control parameters - consider getopt next time...
   // looking for -t(une) -s(peed)
   int c = 1;
-  bool tune_controller = false;
+  int tune_controller = -1;
   bool use_throttle_controller = false;
   while (c < argc) {
     if (argv[c] == "-t") {
-      tune_controller = true;
+      tune_controller = 0;
     }
     if (argv[c] == "-s") {
       use_throttle_controller = true;
