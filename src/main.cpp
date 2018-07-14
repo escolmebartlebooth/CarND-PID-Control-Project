@@ -40,14 +40,14 @@ int main(int argc, char* argv[])
   while (c < argc) {
     if (strcmp(argv[c],"-t") == 0) {
       tune_controller = 0;
+      std::cout << "TUNING!" << std::endl;
     }
     if (strcmp(argv[c],"-s") == 0) {
       use_throttle_controller = 0;
+      std::cout << "throttle control on!" << std::endl;
     }
     c += 1;
   }
-
-  std::cout << tune_controller << std::endl;
 
   PID pid;
   // TODO: Initialize the pid variable.
@@ -86,8 +86,6 @@ int main(int argc, char* argv[])
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
-          std::cout << tune_controller << std::endl;
-          std::cout << use_throttle_controller << std::endl;
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
           if (steer_value > 1.0) {
@@ -97,8 +95,12 @@ int main(int argc, char* argv[])
             steer_value = -1.0;
           }
 
-          t_pid.UpdateError(cte);
-          throttle = 1.0 - fabs(t_pid.TotalError());
+          if (use_throttle_controller == 0) {
+            t_pid.UpdateError(cte);
+            throttle = 1.0 - fabs(t_pid.TotalError());
+          } else {
+            throttle = 0.3;
+          }
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
           std::cout << " angle: " << angle;
