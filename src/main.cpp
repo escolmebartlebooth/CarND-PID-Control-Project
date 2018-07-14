@@ -96,9 +96,15 @@ int main(int argc, char* argv[])
 
   PID pid;
   // TODO: Initialize the pid variable.
-  double iKp = 0.135;
-  double iKi = 0.00027;
-  double iKd = 3.05;
+  if (tune_controller ==0) {
+    double iKp = 0.0;
+    double iKi = 0.0;
+    double iKd = 0.0;
+  } else {
+    double iKp = 0.135;
+    double iKi = 0.00027;
+    double iKd = 3.05;
+  }
   pid.Init(iKp, iKi, iKd);
 
   PID t_pid;
