@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
   uWS::Hub h;
 
   // get control parameters - consider getopt next time...
-  // looking for -t(une) -s(peed) -k 0 1 2(steer values) -v 0 1 2 (throttle values)
+  // looking for -t(une) -s(peed)
   int c = 1;
   bool tune_controller = false;
   bool use_throttle_controller = false;
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
   double tKd = 3.0;
   t_pid.Init(tKp, tKi, tKd);
 
-  h.onMessage([&pid, &t_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid, &t_pid, &tune_controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -84,6 +84,11 @@ int main(int argc, char* argv[])
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
+          if (tune_controller == true) {
+            std::cout << "tune" << std::endl;
+          } {
+            std::cout << "don't tune" << std::endl;
+          }
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
           if (steer_value > 1.0) {
