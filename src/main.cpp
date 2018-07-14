@@ -82,29 +82,28 @@ int main(int argc, char* argv[])
   int c = 1;
   int tune_controller = -1;
   int use_throttle_controller = -1;
+
+  std::vector<double> coeffs = {0.135,0.00027,3.05};
+  int count_params = 0;
   while (c < argc) {
     if (strcmp(argv[c],"-t") == 0) {
       tune_controller = 0;
       std::cout << "TUNING!" << std::endl;
-    }
-    if (strcmp(argv[c],"-s") == 0) {
-      use_throttle_controller = 0;
-      std::cout << "throttle control on!" << std::endl;
-    }
+    } else if (strcmp(argv[c],"-s") == 0) {
+        use_throttle_controller = 0;
+        std::cout << "throttle control on!" << std::endl;
+      } else {
+        if (atof(argv[c]) !=0) {
+          coeffs[count_params] = atof(argv[c])
+          count_params += 1;
+        }
+      }
     c += 1;
   }
 
   PID pid;
   // TODO: Initialize the pid variable.
-  double iKp = 0.135;
-  double iKi = 0.00027;
-  double iKd = 3.05;
-  if (tune_controller ==0) {
-    iKp = 0.0;
-    iKi = 0.0;
-    iKd = 0.0;
-  }
-  pid.Init(iKp, iKi, iKd);
+  pid.Init(coeffs[0], coeffs[1], coeffs[2]);
 
   PID t_pid;
   // TODO: Initialize the pid variable.
