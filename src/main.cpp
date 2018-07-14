@@ -39,7 +39,7 @@ void twiddle(PID &pid_steer) {
   if (t_state == 0) {
     best_error = pid_steer.TotalError();
     p[t_idx] += dp[t_idx];
-    t_state = 1
+    t_state = 1;
   } else if (t_state == 1) {
     if (pid_steer.TotalError() < best_error) {
       best_error = pid_steer.TotalError();
