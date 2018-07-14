@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
         use_throttle_controller = 0;
         std::cout << "throttle control on!" << std::endl;
       } else {
-        if (atof(argv[c]) !=0) {
+        if (count_params < 3) {
           coeffs[count_params] = atof(argv[c]);
           count_params += 1;
         }
