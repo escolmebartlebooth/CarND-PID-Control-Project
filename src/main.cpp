@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
           coeffs[count_params] = atof(argv[c]);
           count_params += 1;
         } else if (count_params < 6) {
-          thottle_coeffs[count_params-3] = atof(argv[c]);
+          throttle_coeffs[count_params-3] = atof(argv[c]);
           count_params += 1;
           }
       }
