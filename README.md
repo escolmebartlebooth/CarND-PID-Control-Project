@@ -5,7 +5,14 @@ Date: 15 July 2018
 
 ---
 
+[//]: # (Image References)
+
+[image1]: PID_ManualTune.PNG "PID Manual Tuning"
+[image2]: RMSE.PNG "RMSE Values"
+
 ## Objectives
+
+To implement and tune PID controllers for steering and throttle so that a car can safely drive round the simulator test track without leaving the road surface at as fast a speed as possible.
 
 ## Dependencies
 
@@ -40,6 +47,7 @@ Note that there are 2 additional optional parameters:
 
 * "-t": passing this as a command line parameter will put the software into tune mode
 * "-s": passing this as a command line parameter will turn a throttle controller on
+* it is also possible to pass initial values for the coefficients by passing up to 6 double values: ./pid 1.0 1.0 for example will set the P and I coefficients for the steering controller to 1.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
@@ -60,18 +68,31 @@ The software is located in /src:
 
 ### How PID works
 
-If a control value (for example steering) can be measured in terms of how far away from the control value is from the optimium value, then a controller can be created which returns the object being controlled to that optimium value.
+There are 3 components to PID control:
 
-In PID control, 3 control terms are applicable:
-* P(roportional): the control value is reduced in proportion to itself using a constant proportional value (Kp). For example, if the control error (CTE) is 5 units, the proportional controller would adjust the controller by -Kp*CTE = -5Kp.
-* I(ntegral)
-* D(erivative)
+* P - the proportional part takes the measured cross-track error (how far off the optimal trajectory the object is) and changes the steering angle in inverse proportion to that error. The proportion (or gain, Kp) controls how much the proportional element adjusts the control action (steering). Too low and the steering will not adjust sufficiently. Too high and the steering will adjust too much and start to oscillate and/or become unstable
+* I - the integral part adjusts the controller in proportion to the sum of the errors observed over time.
+* D - the derivative part introduces an adjustment based on the rate of change of the error from one step to the next. Again, the value of the gain (Kd) affects how large an adjustment is made. This control action has the effect of dampening the
 
-Each term contributes to the overall control...
+In the graph below, 5 control values are shown:
+* P only at 0.105: clearly showing the oscillation
+* PD with D and 1.0: This shows the dampening effect of the D control term but the continued offset from zero error
+* PID at 0.0002, 0.0004, 0.002: showing the effect of increasing integral control to arrive and an error which stays close to zero over time.
+![alt text][image1]
+
 
 ### Tuning: Manual Approaches
+
+The initial tuning is achieved manually. The steering controller is set to 0.0 for the I and D parts. An initial value for P is tried and then either decreased or increased until the car starts to oscillate on the track.
+
+Once the initial P value is found, D is set by experiment to try and dampen the oscillations so the driving experience is smoother.
+
+Finally, the I part is introduced to enable the car to be more central to the road.
+
+By trial and error, initial values of P = 0.105, I = 0.002 and D = 1.0 allowed the car to drive successfully around the track.
 
 ### Tuning: Algorithmic Approaches
 
 ### Burning it up
 
+The same approach was tried with the throttle controller resulting in values of P = 0.5 and D = 1.0. For the throttle controller, I was left as 0.

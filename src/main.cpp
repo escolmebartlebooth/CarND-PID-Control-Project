@@ -32,8 +32,8 @@ double best_error = 100000;
 double t_state = 0;
 int t_idx = 0;
 int t_iter = 0;
-std::vector<double> p = {0,0,0};
-std::vector<double> dp = {1,1,1};
+std::vector<double> p = {0.105,0.002,1.0};
+std::vector<double> dp = {0.05,0.0005,0.25};
 
 void twiddle(PID &pid_steer) {
   if (t_state == 0) {
@@ -83,8 +83,8 @@ int main(int argc, char* argv[])
   int tune_controller = -1;
   int use_throttle_controller = -1;
 
-  std::vector<double> coeffs = {0.135,0.00027,3.05};
-  std::vector<double> throttle_coeffs = {0.6,0.0,3.0};
+  std::vector<double> coeffs = {0.105,0.002,1.0};
+  std::vector<double> throttle_coeffs = {0.5,0.0,1.0};
   int count_params = 0;
   while (c < argc) {
     if (strcmp(argv[c],"-t") == 0) {
@@ -161,6 +161,8 @@ int main(int argc, char* argv[])
             std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
             std::cout << "|angle|" << angle;
             std::cout << "|speed|" << speed << std::endl;
+
+            std::cout << "Coeffs|" << pid.Kp << "|" << pid.Ki << "|" << pid.Kd << std::endl;
 
             json msgJson;
             msgJson["steering_angle"] = steer_value;
