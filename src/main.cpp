@@ -156,20 +156,21 @@ int main(int argc, char* argv[])
             if (t_iter > 500) {
               twiddle(pid);
               t_iter = 0;
+              std::string msg = "42[\"reset\", {}]";
+              ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+              std::cout << "Coeffs|" << pid.Kp << "|" << pid.Ki << "|" << pid.Kd << std::endl;
+            } else {
+              json msgJson;
+              msgJson["steering_angle"] = steer_value;
+              msgJson["throttle"] = throttle;
+              auto msg = "42[\"steer\"," + msgJson.dump() + "]";
+              // std::cout << msg << std::endl;
+              ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
             }
             // DEBUG
-            std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
-            std::cout << "|angle|" << angle;
-            std::cout << "|speed|" << speed << std::endl;
-
-            std::cout << "Coeffs|" << pid.Kp << "|" << pid.Ki << "|" << pid.Kd << std::endl;
-
-            json msgJson;
-            msgJson["steering_angle"] = steer_value;
-            msgJson["throttle"] = throttle;
-            auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-            std::cout << msg << std::endl;
-            ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+            //std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
+            //std::cout << "|angle|" << angle;
+            //std::cout << "|speed|" << speed << std::endl;
           } else {
             // DEBUG
             std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
