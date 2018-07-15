@@ -158,9 +158,9 @@ int main(int argc, char* argv[])
               t_iter = 0;
             }
             // DEBUG
-            std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
-            std::cout << " angle: " << angle;
-            std::cout << " speed: " << speed << std::endl;
+            std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
+            std::cout << "|angle|" << angle;
+            std::cout << "|speed|" << speed << std::endl;
 
             json msgJson;
             msgJson["steering_angle"] = steer_value;
