@@ -20,6 +20,7 @@ void PID::Init(double Kp, double Ki, double Kd) {
   this->p_error = 0;
   this->i_error = 0;
   this->d_error = 0;
+  this->squared_error = 0;
   this->d_cte = 0;
   this->i_cte = 0;
 
@@ -40,6 +41,9 @@ void PID::UpdateError(double cte) {
   // take sum over all error for integral step
   i_cte += cte;
   i_error = -Ki*i_cte;
+
+  // track sum of squared errors
+  squared_error += pow(cte, 2);
 }
 
 double PID::TotalError() {
