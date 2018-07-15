@@ -170,9 +170,9 @@ int main(int argc, char* argv[])
             ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
           } else {
             // DEBUG
-            std::cout << "CTE: " << cte << " Steering Value: " << steer_value;
-            std::cout << " angle: " << angle;
-            std::cout << " speed: " << speed << std::endl;
+            std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
+            std::cout << "|angle|" << angle;
+            std::cout << "|speed|" << speed << std::endl;
 
             json msgJson;
             msgJson["steering_angle"] = steer_value;
