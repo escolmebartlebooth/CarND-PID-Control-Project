@@ -33,6 +33,7 @@ double t_state = 0;
 int t_idx = 0;
 int t_iter = 0;
 int n_iter = 2000;
+int tune_count = 0;
 std::vector<double> p = {0.105,0.002,1.0};
 std::vector<double> dp = {0.05,0.0005,0.25};
 
@@ -155,11 +156,12 @@ int main(int argc, char* argv[])
           if (tune_controller == 0) {
             t_iter += 1;
             if (t_iter > n_iter) {
+              tune_count += 1;
               twiddle(pid);
               t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
-              std::cout << pid.squared_error << "|" << t_iter << "|Coeffs|" << pid.Kp << "|" << pid.Ki << "|" << pid.Kd << std::endl;
+              std::cout << cte << "|" << tune_count << "|Coeffs|" << pid.Kp << "|" << pid.Ki << "|" << pid.Kd << std::endl;
             } else {
               json msgJson;
               msgJson["steering_angle"] = steer_value;
