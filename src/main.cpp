@@ -38,12 +38,12 @@ std::vector<double> dp = {0.05,0.0005,0.25};
 
 void twiddle(PID &pid_steer) {
   if (t_state == 0) {
-    best_error = pid_steer.squared_error;
+    best_error = pid_steer.TotalError();
     p[t_idx] += dp[t_idx];
     t_state = 1;
   } else if (t_state == 1) {
-    if (pid_steer.squared_error < best_error) {
-      best_error = pid_steer.squared_error;
+    if (pid_steer.TotalError() < best_error) {
+      best_error = pid_steer.TotalError();
       dp[t_idx] *= 1.1;
       t_idx = (t_idx + 1) % 3;
       p[t_idx] += dp[t_idx];
@@ -57,8 +57,8 @@ void twiddle(PID &pid_steer) {
       t_state = 2;
     }
   } else {
-    if (pid_steer.squared_error < best_error) {
-      best_error = pid_steer.squared_error;
+    if (pid_steer.TotalError() < best_error) {
+      best_error = pid_steer.TotalError();
       dp[t_idx] *= 1.1;
       t_idx = (t_idx + 1) % 3;
       p[t_idx] += dp[t_idx];
