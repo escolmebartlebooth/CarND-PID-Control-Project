@@ -8,7 +8,8 @@ private:
   */
   double d_cte;
   double i_cte;
-
+  double mean_error;
+  int step_count;
 public:
   /*
   * Errors
@@ -48,6 +49,10 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
+  /*
+  * Calculate the mean PID error.
+  */
+  double MeanError();
 };
 
 #endif /* PID_H */
