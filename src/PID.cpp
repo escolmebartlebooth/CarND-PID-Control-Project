@@ -43,7 +43,7 @@ void PID::UpdateError(double cte) {
   i_error = -Ki*i_cte;
 
   // track sum of squared errors
-  squared_error += pow(cte, 2);
+  squared_error += (cte * cte);
 }
 
 double PID::TotalError() {
