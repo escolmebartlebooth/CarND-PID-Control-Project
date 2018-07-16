@@ -177,15 +177,15 @@ int main(int argc, char* argv[])
             //std::cout << "|speed|" << speed << std::endl;
           } else {
             // DEBUG
-            std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
-            std::cout << "|angle|" << angle;
-            std::cout << "|speed|" << speed << std::endl;
+            std::cout << cte << "|" << steer_value;
+            std::cout << "|" << angle << "|" << throttle;
+            std::cout << "|" << speed << std::endl;
 
             json msgJson;
             msgJson["steering_angle"] = steer_value;
             msgJson["throttle"] = throttle;
             auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-            std::cout << msg << std::endl;
+            //std::cout << msg << std::endl;
             ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
           }
         }
