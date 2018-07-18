@@ -151,9 +151,6 @@ int main(int argc, char* argv[])
             t_pid.UpdateError(cte);
             throttle = fabs(t_pid.TotalError());
             throttle = 1.0 - throttle;
-            if (throttle < 0) {
-              throttle = 0;
-            }
           } else {
             throttle = 0.3;
           }
