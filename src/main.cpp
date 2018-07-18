@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
             if (pid.t_iter > pid.n_iter) {
               pid.tune_count += 1;
               double mte = pid.MeanError();
-              pid.twiddle();
+              pid.TunePID();
               pid.t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
