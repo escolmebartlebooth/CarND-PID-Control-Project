@@ -154,12 +154,12 @@ int main(int argc, char* argv[])
             throttle = 0.3;
           }
           if (tune_controller == 0) {
-            t_iter += 1;
-            if (t_iter > n_iter) {
-              tune_count += 1;
+            pid.t_iter += 1;
+            if (pid.t_iter > pid.n_iter) {
+              pid.tune_count += 1;
               double mte = pid.MeanError();
-              twiddle(pid);
-              t_iter = 0;
+              pid.twiddle();
+              pid.t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
               std::cout << mte << "|" << tune_count << std::endl;
