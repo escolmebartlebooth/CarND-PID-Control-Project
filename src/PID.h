@@ -10,10 +10,6 @@ private:
   double i_cte;
   double mean_error;
   int step_count;
-  double t_state;
-  int t_idx;
-  std::vector<double> p;
-  std::vector<double> dp;
 
 public:
   /*
@@ -29,13 +25,6 @@ public:
   double Kp;
   double Ki;
   double Kd;
-
-  /*
-  * Tuning Variables
-  */
-  int t_iter;
-  int n_iter;
-  int tune_count;
 
   /*
   * Constructor
