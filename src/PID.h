@@ -1,8 +1,6 @@
 #ifndef PID_H
 #define PID_H
 
-#include <vector>
-
 class PID {
 private:
   /*
@@ -12,7 +10,6 @@ private:
   double i_cte;
   double mean_error;
   int step_count;
-  double best_error;
   double t_state;
   int t_idx;
   std::vector<double> p;
@@ -59,11 +56,6 @@ public:
   * Update the PID error variables given cross track error.
   */
   void UpdateError(double cte);
-
-  /*
-  * Self Tuning Algorithm.
-  */
-  void TunePID();
 
   /*
   * Calculate the total PID error.

@@ -149,17 +149,21 @@ int main(int argc, char* argv[])
 
           if (use_throttle_controller == 0) {
             t_pid.UpdateError(cte);
-            throttle = 1.0 - fabs(t_pid.TotalError());
+            throttle = fabs(t_pid.TotalError());
+            throttle = 1.0 - throttle;
+            if (throttle < 0) {
+              throttle = 0;
+            }
           } else {
             throttle = 0.3;
           }
           if (tune_controller == 0) {
-            pid.t_iter += 1;
-            if (pid.t_iter > pid.n_iter) {
-              pid.tune_count += 1;
-              double mte = pid.MeanError();
-              pid.TunePID();
-              pid.t_iter = 0;
+            t_iter += 1;
+            if (t_iter > n_iter) {
+              tune_count += 1;
+              double mte = pid_steer.MeanError();
+              twiddle(pid_steer);
+              t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
               std::cout << mte << "|" << tune_count << std::endl;
