@@ -161,8 +161,8 @@ int main(int argc, char* argv[])
             t_iter += 1;
             if (t_iter > n_iter) {
               tune_count += 1;
-              double mte = pid_steer.MeanError();
-              twiddle(pid_steer);
+              double mte = pid.MeanError();
+              twiddle(pid);
               t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
