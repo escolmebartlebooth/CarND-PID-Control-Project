@@ -28,12 +28,16 @@ std::string hasData(std::string s) {
   return "";
 }
 
+
+// inital values for twiddle - should really take this into a class
 double best_error = 100000;
 double t_state = 0;
 int t_idx = 0;
 int t_iter = 0;
 int n_iter = 1500;
 int tune_count = 0;
+
+// starting values for the controllers
 std::vector<double> p = {0.105,0.002,1.0};
 std::vector<double> dp = {0.05,0.0005,0.25};
 
@@ -85,20 +89,27 @@ int main(int argc, char* argv[])
   int tune_controller = -1;
   int use_throttle_controller = -1;
 
+  // default gains in case none are passed
   std::vector<double> coeffs = {0.105,0.002,1.0};
   std::vector<double> throttle_coeffs = {0.5,0.0,1.0};
+
+  // capture command line params in a not-so-great way
   int count_params = 0;
   while (c < argc) {
+    // we want to tune?
     if (strcmp(argv[c],"-t") == 0) {
       tune_controller = 0;
       std::cout << "TUNING!" << std::endl;
+      // we want to go fast?
     } else if (strcmp(argv[c],"-s") == 0) {
         use_throttle_controller = 0;
         std::cout << "throttle control on!" << std::endl;
       } else {
+        // we want to pass params for steering
         if (count_params < 3) {
           coeffs[count_params] = atof(argv[c]);
           count_params += 1;
+          // we want to pass params for throttle
         } else if (count_params < 6) {
           throttle_coeffs[count_params-3] = atof(argv[c]);
           count_params += 1;
@@ -108,11 +119,11 @@ int main(int argc, char* argv[])
   }
 
   PID pid;
-  // TODO: Initialize the pid variable.
+  // Initialize the pid variable for steering
   pid.Init(coeffs[0], coeffs[1], coeffs[2]);
 
   PID t_pid;
-  // TODO: Initialize the pid variable.
+  // Initialize the pid variable for throttle - even if not asked for
   t_pid.Init(throttle_coeffs[0], throttle_coeffs[1], throttle_coeffs[2]);
 
   h.onMessage([&pid, &t_pid, &tune_controller, &use_throttle_controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -138,7 +149,10 @@ int main(int argc, char* argv[])
           * NOTE: Feel free to play around with the throttle and speed. Maybe use
           * another PID controller to control the speed!
           */
+          // Update the individual errors from current error
           pid.UpdateError(cte);
+
+          // get the total error and bound to +/- 1
           steer_value = pid.TotalError();
           if (steer_value > 1.0) {
             steer_value = 1.0;
@@ -147,19 +161,36 @@ int main(int argc, char* argv[])
             steer_value = -1.0;
           }
 
+          // if we're asking to go fast do the same for the throttle
           if (use_throttle_controller == 0) {
             t_pid.UpdateError(cte);
+            // use absolute error offset from maximum
             throttle = fabs(t_pid.TotalError());
             throttle = 1.0 - throttle;
+            if (throttle > 1.0) {
+              throttle = 1.0;
+            }
+            if (throttle < -1.0) {
+              throttle = -1.0;
+            }
           } else {
+            // otherwise fixed throttle
             throttle = 0.3;
           }
+
+          // if we want to tune, use twiddle
           if (tune_controller == 0) {
+            // track how many steps in the current run we've done
             t_iter += 1;
+            // if we've done a complete lap then twiddle
             if (t_iter > n_iter) {
+              // track how many times we've twiddled
               tune_count += 1;
+              // get the mean error for the run
               double mte = pid.MeanError();
+              // twiddle it - which will re-initialise the controller
               twiddle(pid);
+              // set the step counter to zero and reset the simulator
               t_iter = 0;
               std::string msg = "42[\"reset\", {}]";
               ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
@@ -176,6 +207,8 @@ int main(int argc, char* argv[])
             //std::cout << "CTE|" << cte << "|Steering Value|" << steer_value;
             //std::cout << "|angle|" << angle;
             //std::cout << "|speed|" << speed << std::endl;
+
+            // otherwise just output the values to the simulator
           } else {
             // DEBUG
             std::cout << cte << "|" << steer_value;

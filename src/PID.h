@@ -4,16 +4,20 @@
 class PID {
 private:
   /*
-  * track cte change
+  * track errors
   */
   double d_cte;
   double i_cte;
+
+  /*
+  * track mean error over time
+  */
   double mean_error;
   int step_count;
 
 public:
   /*
-  * Errors
+  * Errors at each time step
   */
   double p_error;
   double i_error;
@@ -47,11 +51,11 @@ public:
   void UpdateError(double cte);
 
   /*
-  * Calculate the total PID error.
+  * Calculate and return the total PID error.
   */
   double TotalError();
   /*
-  * Calculate the mean PID error.
+  * Return the mean absolute PID error.
   */
   double MeanError();
 };
