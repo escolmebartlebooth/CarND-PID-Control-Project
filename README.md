@@ -50,9 +50,11 @@ Note that there are some additional optional parameters which can be passed in a
   * where the 1st 3 passed will initialise the steering controller and the next 3 passed will initialise the throttle controller (even if -s is not passed).
   * If less than 3 or less than 6 are passed, the missing values will be taken from the defaults.
   * If 'bad' values are passed, they will be converted to 0, so this is not a particularly robust method.
-  * examples:
+  * examples
     *./pid 1.0 1.0 for example will set the P and I coefficients for the steering controller to 1.
     * ./pid -t -s -g 1.0 -h -v will put the controller into tune mode and turn on the throttle controller and initialise the steering controller to 0, 1, 0 and the throttle controller to 0 with 2 default values.
+
+The simulator can run with different graphics properties. On an 8GB Lenovo Yoga 2 on Windows 10, using 800x600 and simple graphics should deliver a working lap with default settings.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
