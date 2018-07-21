@@ -42,18 +42,24 @@ std::vector<double> p = {0.105,0.002,1.0};
 std::vector<double> dp = {0.05,0.0005,0.25};
 
 void twiddle(PID &pid_steer) {
+  // first time through, set the best error and increase the gain
   if (t_state == 0) {
     best_error = pid_steer.MeanError();
     p[t_idx] += dp[t_idx];
     t_state = 1;
   } else if (t_state == 1) {
+    // check error
     if (pid_steer.MeanError() < best_error) {
+      // better than last time - update
       best_error = pid_steer.MeanError();
+      // increase that increment for next time
       dp[t_idx] *= 1.1;
+      // get next controller gain and set it
       t_idx = (t_idx + 1) % 3;
       p[t_idx] += dp[t_idx];
       t_state = 1;
     } else {
+      // worse than last time - decrease the gain but bound to zero
       p[t_idx] -= 2 * dp[t_idx];
       if (p[t_idx] < 0) {
         p[t_idx] = 0;
@@ -62,6 +68,7 @@ void twiddle(PID &pid_steer) {
       t_state = 2;
     }
   } else {
+    // check error
     if (pid_steer.MeanError() < best_error) {
       best_error = pid_steer.MeanError();
       dp[t_idx] *= 1.1;

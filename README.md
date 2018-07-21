@@ -42,11 +42,17 @@ To implement and tune PID controllers for steering and throttle so that a car ca
 3. Compile: `cmake .. && make`
 4. Run it: `./pid`.
 
-Note that there are 2 additional optional parameters:
+Note that there are some additional optional parameters which can be passed in any order:
 
-* "-t": passing this as a command line parameter will put the software into tune mode
+* "-t": passing this as a command line parameter will put the software into tune mode for the steering controller
 * "-s": passing this as a command line parameter will turn a throttle controller on
-* it is also possible to pass initial values for the coefficients by passing up to 6 double values: ./pid 1.0 1.0 for example will set the P and I coefficients for the steering controller to 1.
+* it is also possible to pass initial values for the coefficients by passing up to 6 double values
+  * where the 1st 3 passed will initialise the steering controller and the next 3 passed will initialise the throttle controller (even if -s is not passed).
+  * If less than 3 or less than 6 are passed, the missing values will be taken from the defaults.
+  * If 'bad' values are passed, they will be converted to 0, so this is not a particularly robust method.
+  * examples:
+    *./pid 1.0 1.0 for example will set the P and I coefficients for the steering controller to 1.
+    * ./pid -t -s -g 1.0 -h -v will put the controller into tune mode and turn on the throttle controller and initialise the steering controller to 0, 1, 0 and the throttle controller to 0 with 2 default values.
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
@@ -71,9 +77,9 @@ PID controllers use a measured error from an optimal setting to change actuation
 
 In this project the first controller actuates the steering angle of the simulated car. There are 3 components to PID control:
 
-* P - the proportional part takes the measured error (how far off the optimal trajectory the object is) at each time step and changes the steering angle in negative proportion to that error. The proportion (or gain, Kp) controls how much the proportional element adjusts the control action (steering). Too low and the steering will not adjust sufficiently. Too high and the steering will adjust too much and start to oscillate and/or become unstable.
+* P - the proportional part takes the measured error (how far off the optimal trajectory the object is) at each time step and changes the steering angle in negative proportion to that error. The proportion (or gain, Kp) controls how much the proportional element adjusts the control action (steering). Too low and the steering will not adjust sufficiently. Too high and the steering will adjust too much and start to oscillate and/or become unstable. Alone, proportional control will at best oscillate around a central value, which could be offset from zero error.
 * I - the integral part adjusts the controller in proportion to the sum of the errors observed over time. This part of the controller has the effect of adjusting for any offset present in the measurement error.
-* D - the derivative part introduces an adjustment based on the rate of change of the error from one step to the next. Again, the value of the gain (Kd) affects how large an adjustment is made. This control action has the effect of dampening the proportional controller.
+* D - the derivative part introduces an adjustment based on the rate of change of the error from one step to the next. Again, the value of the gain (Kd) affects how large an adjustment is made. This control action has the effect of dampening the proportional controller and the associated oscillations of proportional control
 
 In the graph below, 5 control values are shown:
 * P only at 0.105: clearly showing the oscillation
@@ -135,7 +141,7 @@ Once the steering controller was optimised, a second controller was implemented 
 
 A PID controller with manual tuning and a fixed throttle setting was able to run smoothly round the test track with reasonable approximation to the optimal line set by the cross-track error.
 
-Although tuning using twiddle was implemented, the resulting settings didn't really seem to result in much better performance, so it might be that the error metric for twiddle was working to a local minimum or simply not implemented properly.
+Although tuning using twiddle was implemented, the resulting settings didn't really seem to result in much better performance.
 
-A second controller for throttle control enabled a much faster speed around the track but with fairly unstable performance with some crashes on some runs and even abrupt breaking and some reversing.
+A second controller for throttle control enabled a much faster speed around the track but with fairly unstable performance with some crashes on some runs and even abrupt breaking and some reversing when combined with the tuned steering controller. If using the initial manual tuning settings for both controllers, less crashing occurs!
 
